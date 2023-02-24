@@ -1,22 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using JumpSpace.Controllers;
 using UnityEngine;
 
 namespace JumpSpace.Movements
 {
     public class Mover
     {
+        private PlayerController _playerController;
         private Rigidbody _rigidbody;
-        private float _force = 20;
 
-        public Mover(Rigidbody rigidbody)
+        public Mover(PlayerController playerController)
         {
-            _rigidbody = rigidbody;
+            _playerController = playerController;
+            _rigidbody = playerController.GetComponent<Rigidbody>();
         }
 
         public void FixedTick()
         {
-            _rigidbody.AddForce(Vector3.up *(Time.deltaTime * _force),ForceMode.Impulse);
+            _rigidbody.AddRelativeForce(Vector3.up *(Time.deltaTime * _playerController.Force),ForceMode.Impulse);
+            // playerin local eksenine bakarak yönü belirler
+            //_rigidbody.AddForce();
+            // playerin global eksenine bakarak hareket eder.
         }
         
     }

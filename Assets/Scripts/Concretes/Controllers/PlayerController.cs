@@ -10,18 +10,29 @@ namespace JumpSpace.Controllers
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private float force;
+        [SerializeField] private float turnSpeed;
+
+        public float Force => force;
+        public float TurnSpeed => turnSpeed;
+
+        private float _leftRight;
+        
         public bool isForceUp;
         
         private Rigidbody _rigidbody;
+        
         private DefaultInput _input;
         private Mover _mover;
+        private Rotator _rotator;
    
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            
             _input = new DefaultInput();
-            _mover = new Mover(_rigidbody);
+            _mover = new Mover(this);
+            _rotator = new Rotator(this);
         }
 
         private void Update()
@@ -30,7 +41,9 @@ namespace JumpSpace.Controllers
                 isForceUp = true;
             else
                 isForceUp = false;
-            
+
+            _leftRight = _input._leftRight;
+
             //isForceUp = _input.isForceUp;
         }
         
@@ -38,12 +51,10 @@ namespace JumpSpace.Controllers
         {
             if (isForceUp)
             {
-                // _rigidbody.AddForce(Vector3.up * (Time.deltaTime * force),ForceMode.Impulse);
                 _mover.FixedTick();
             }
+            _rotator.FixedTick(_leftRight);
         }
-
-   
     }
 }
 
